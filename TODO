@@ -1,0 +1,68 @@
+LE fichier pour savoir ce qu'on fait et pour marquer qui a fait quoi ou quoi :
+
+--> Le rapport en .rst ou .tex?
+
+--> Pour compiler :
+    $ touch .depend
+    $ make -f Makefile_mod/app clean depend all
+
+
+--> rajouter partie malefile pour module
+--> ajouter notre module dans ?? avec le numero majeur et tout pour acceder
+    aux diferentes fonction de Fops par /fs/module... (comme dans le tp n ?)
+--> faire un fichier .h contenant les différentes valeurs d'appel de fonction
+    ioctl
+
+du coup faire les differentes fonctions qui correspondent au numéros dans
+device_ioctl
+
+regarder comment marche les workqueue aussi,
+  -> on s'en servira dans le module pour traiter chaque demande de l'ioctl
+
+le traitement de chaque truc est surement casse couille
+
+*********************
+07/04/2017 :
+*********************
+
+tout changer pour que ca marcher avec des structures :
+voir our_mod.h pour la structure
+   -> contient un nom
+   -> un tableau de param
+   -> si c'est une commande asynchrone ou pas (pas encore implementé dans main.c
+
+si tu reussit à faire des kmalloc qui compilent pour commande_list.nom et param
+dans mon_module_init (our_mod.c)
+on a la fonction list qui marche :D (elle compile mais pas testé mais doit marcher normalement sauf bug pourrit que j'ai raté
+
+il faut rajouter un copy_to_user de la chaine de caractère retour dans ioctl pour que l'affichage se fasse coté user
+
+ET ALORS LA !
+SI jamais t'arrives à trouver d'ou vient un de mes bug de main.c
+RESTECP :p
+
+li 112 si je met un i plus grand que 4 seg fault alors que malloc 10...
+l 34 si je met un i plus grand que 8 seg fault alors que malloc 10...
+
+*********************
+09/04/2017 :
+*********************
+
+modification de la structure commande pour avoir un champs retour qui permet de passer le message de retour de l'ioctl par la structure
+
+ajout du copy_to_user pour faire passer la chaine de retour du coté user
+
+ajout de copy_from_user pour recuperer toute la structure pas juste la coquille
+
+manque des kmalloc de partout, je veux bien de l'aide dessus X)
+
+Reste plein de debug a faire je suppose si tu veux t'amuser à essayder de comprendre XD surtout du coté module pour le debug, la partie user est bonne.
+Manque juste la gestion du '&' mais on verra ca unefois le module debugge bien comme il faut
+
+
+/****
+J'ai essayé de refaire le module : je me prends plein d'erreurs.
+C'est mieux de se voir directement a la fac pour le projet parce que là ça va etr dur.
+
+on doit pouvoir faire autrement les kmalloc, les fonctions qui retournent une liste de string etc... au lieu d'un char de taille fixe...
+****/
